@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Website</title>
+  <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
+  <script>
+    // Initialize Ably with your API Key
+    const ably = new Ably.Realtime('7l-9Sg.1xpmcw:SFC8SBTzvUZ4ugXaBkxQP7AzBBV1DabC5_GXLEuSlPk');
+    const channel = ably.channels.get('site-status');
+
+    // Listen for a "check-status" event from the checker website
+    channel.subscribe('check-status', () => {
+      // Send back the online status
+      channel.publish('status', { message: "I'm online. What can I do for you?", timestamp: new Date().toISOString() }, (err) => {
+        if (err) {
+          console.error('Failed to send status:', err);
+        } else {
+          console.log('Status sent: "I\'m online. What can I do for you?"');
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Main Website</h1>
+  <p>This site responds to the checker website's requests to confirm its status.</p>
+</body>
+</html>
